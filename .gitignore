@@ -1,0 +1,5 @@
+# Never commit actual credentials
+.env
+
+# Database dumps
+db/*.sql
