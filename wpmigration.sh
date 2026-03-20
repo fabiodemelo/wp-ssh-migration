@@ -84,15 +84,21 @@ fmt_elapsed() {
     fi
 }
 
-# Format bytes → human readable
+# Format bytes → human readable (pure bash, no bc dependency)
 fmt_bytes() {
     local bytes="$1"
     if [ "$bytes" -ge 1073741824 ]; then
-        printf '%.1f GB' "$(echo "$bytes / 1073741824" | bc -l)"
+        local whole=$((bytes / 1073741824))
+        local frac=$(( (bytes % 1073741824) * 10 / 1073741824 ))
+        printf '%d.%d GB' "$whole" "$frac"
     elif [ "$bytes" -ge 1048576 ]; then
-        printf '%.1f MB' "$(echo "$bytes / 1048576" | bc -l)"
+        local whole=$((bytes / 1048576))
+        local frac=$(( (bytes % 1048576) * 10 / 1048576 ))
+        printf '%d.%d MB' "$whole" "$frac"
     elif [ "$bytes" -ge 1024 ]; then
-        printf '%.1f KB' "$(echo "$bytes / 1024" | bc -l)"
+        local whole=$((bytes / 1024))
+        local frac=$(( (bytes % 1024) * 10 / 1024 ))
+        printf '%d.%d KB' "$whole" "$frac"
     else
         printf '%d B' "$bytes"
     fi
